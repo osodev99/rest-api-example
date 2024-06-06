@@ -20,7 +20,7 @@ router.get("/users", async (req, res) => {
 router.get("/users/:user_id", async (req, res) => {
     await Users.sync();
     const id = req.params.user_id;
-    const user = await Users.findOne({ where: { userId: id } });
+    const user = await Users.findOne({ where: { id: id } });
     if (user) {
         return res.status(200).json(user);
     } else {
@@ -36,7 +36,9 @@ router.post("/signup", async (req, res) => {
     const validate = ajvUtil.compile(signUpSchema);
     const valid = validate(signUpBody);
     if (!valid) {
-        return res.status(400).json({ error: "Invalid format" });
+        return res.status(400).json({
+            error: "Invalid format", cause: validate.errors,
+        });
     } else {
         await Users.sync();
         const createUser = await Users.create({
@@ -55,7 +57,9 @@ router.post("/signin", async (req, res) => {
     const validate = ajvUtil.compile(signInSchema);
     const valid = validate(signInBody);
     if (!valid) {
-        return res.status(400).json({ error: "Invalid format" });
+        return res.status(400).json({
+            error: "Invalid format", cause: validate.errors,
+        });
     } else {
         await Users.sync();
 
@@ -65,7 +69,7 @@ router.post("/signin", async (req, res) => {
 
         if (user) {
             const token = jwt.sign(
-                { userId: user.userId },
+                { userId: user.id },
                 'SECRET-KEY'
             )
             return res.json({ token: token });

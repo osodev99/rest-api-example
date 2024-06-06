@@ -17,6 +17,15 @@ module.exports = {
             password: { type: "string" },
         },
         required: ["email", "password", "fullName"],
-    }
+    },
 
+    phraseSchema: {
+        type: "object",
+        properties: {
+            phrase: { type: "string" },
+            latitude: { type: "number" },
+            longitude: { type: "number" },
+        },
+        required: ["phrase"],
+    }
 }
