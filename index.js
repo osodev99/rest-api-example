@@ -13,6 +13,7 @@ app.use(morgan("dev"))
 app.listen(3000, async () => {
     try {
         await connection.authenticate();
+        await connection.sync();
         console.log('Connection has been established successfully.');
         console.log(`Server is running on port 3000`);
     } catch (error) {
